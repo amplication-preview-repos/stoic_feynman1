@@ -1,0 +1,92 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+model Component {
+  createdAt        DateTime          @default(now())
+  id               String            @id @default(cuid())
+  name             String?
+  softwareProjects SoftwareProject[]
+  updatedAt        DateTime          @updatedAt
+}
+
+model Framework {
+  createdAt        DateTime          @default(now())
+  id               String            @id @default(cuid())
+  name             String?
+  softwareProjects SoftwareProject[]
+  updatedAt        DateTime          @updatedAt
+}
+
+model Library {
+  createdAt        DateTime          @default(now())
+  id               String            @id @default(cuid())
+  name             String?
+  softwareProjects SoftwareProject[]
+  updatedAt        DateTime          @updatedAt
+}
+
+model Certificate {
+  createdAt        DateTime          @default(now())
+  expiryDate       DateTime?
+  id               String            @id @default(cuid())
+  name             String?
+  softwareProjects SoftwareProject[]
+  updatedAt        DateTime          @updatedAt
+}
+
+model SoftwareProject {
+  certificate           Certificate?         @relation(fields: [certificateId], references: [id])
+  certificateId         String?
+  component             Component?           @relation(fields: [componentId], references: [id])
+  componentId           String?
+  createdAt             DateTime             @default(now())
+  framework             Framework?           @relation(fields: [frameworkId], references: [id])
+  frameworkId           String?
+  handoverDate          DateTime?
+  id                    String               @id @default(cuid())
+  library               Library?             @relation(fields: [libraryId], references: [id])
+  libraryId             String?
+  licenseSubscription   LicenseSubscription? @relation(fields: [licenseSubscriptionId], references: [id])
+  licenseSubscriptionId String?
+  technology            Technology?          @relation(fields: [technologyId], references: [id])
+  technologyId          String?
+  updatedAt             DateTime             @updatedAt
+  warrantyEndDate       DateTime?
+  warrantyStartDate     DateTime?
+}
+
+model LicenseSubscription {
+  createdAt        DateTime          @default(now())
+  expiryDate       DateTime?
+  id               String            @id @default(cuid())
+  name             String?
+  softwareProjects SoftwareProject[]
+  updatedAt        DateTime          @updatedAt
+}
+
+model Technology {
+  createdAt        DateTime          @default(now())
+  expiryDate       DateTime?
+  id               String            @id @default(cuid())
+  name             String?
+  softwareProjects SoftwareProject[]
+  updatedAt        DateTime          @updatedAt
+}
